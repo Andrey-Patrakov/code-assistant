@@ -1,14 +1,7 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
 import pickle
 
 
 class Assistant:
-
-    def init(self):
-        self.model_name = "Qwen/Qwen2.5-Coder-3B-Instruct"
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        self.model = AutoModelForCausalLM.from_pretrained(
-            self.model_name, torch_dtype="auto", device_map="auto")
 
     def complete_code(self, text: str, cursor_position: int):
         text = text[:cursor_position]+'<|fim_suffix|>'+text[cursor_position:]
