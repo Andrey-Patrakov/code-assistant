@@ -9,18 +9,22 @@ export default class Assistant {
     private _decoration: Decoration;
 
     constructor() {
+        let decoration_text = 'Обновить предсказание: `Alt` + `U`'
+        decoration_text += 'Вставка строки: `Alt` + `→`\\\n';
+        decoration_text += 'Вставка слова: `Alt` + `←`\\\n';
+
         this._prediction = null;
-        this._decoration = new Decoration(
-            'Вставка строки: `Alt` + `→`\\\nВставка слова: `Alt` + `←`'
-        );
+        this._decoration = new Decoration(decoration_text);
     }
 
     insertLine() {
         this._prediction?.insertLine();
+        this.clear();
     }
 
     insertWord() {
         this._prediction?.insertWord();
+        this.clear();
     }
 
     async update() {

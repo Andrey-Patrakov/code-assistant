@@ -9,14 +9,21 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const assistant = new Assistant();
 
-	vscode.workspace.onDidChangeTextDocument(async (e) => {
+	vscode.window.onDidChangeTextEditorSelection(async (e) => {
 		await assistant.update();
 	});
 
-	const insertCompletion = vscode.commands.registerCommand('code-assistant.insertCompletion', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('code-assistant.update', () => {
+		assistant.update();
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('code-assistant.insertLine', () => {
 		assistant.insertLine();
-	});
-	context.subscriptions.push(insertCompletion);
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('code-assistant.insertWord', () => {
+		assistant.insertWord();
+	}));
 }
 
 // This method is called when your extension is deactivated

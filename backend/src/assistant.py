@@ -6,17 +6,18 @@ class Assistant:
     def complete_code(self, text: str, cursor_position: int):
         text = text[:cursor_position]+'<|fim_suffix|>'+text[cursor_position:]
         input_text = f'<|fim_prefix|>{text}<|fim_middle|>'
+
+        system_message = 'You are a code completion assistant.'
+        system_message += ' You can only return one line of code.'
         messages = [
-            {'role': 'system',
-             'content': 'You are a code completion assistant.'},
-            {'role': 'user',
-             'content': input_text}]
+            {'role': 'system', 'content': system_message},
+            {'role': 'user', 'content': input_text}]
 
-        prediction = self.predict(messages, 64).split('\n')
-        if len(prediction) >= 2:
-            return prediction[1]
+        result = self.predict(messages, 128).split('\n')
+        if len(result) >= 3:
+            result = result[1:-1]
 
-        return ''
+        return '\n'.join(result)
 
     def predict(self, messages: list[dict], max_new_tokens: int = 128):
         text = self.tokenizer.apply_chat_template(

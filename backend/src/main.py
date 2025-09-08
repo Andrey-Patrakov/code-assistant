@@ -7,7 +7,6 @@ from .assistant import Assistant
 
 app = FastAPI()
 assistant = Assistant()
-# assistant.init()
 assistant.load('./src/model.pkl')
 
 

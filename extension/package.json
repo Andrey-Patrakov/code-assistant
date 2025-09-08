@@ -16,8 +16,30 @@
   "contributes": {
     "commands": [
       {
-        "command": "code-assistant.insertCompletion",
-        "title": "Insert Completion"
+        "command": "code-assistant.update",
+        "title": "Update Prediction"
+      },
+      {
+        "command": "code-assistant.insertLine",
+        "title": "Insert Predicted Line"
+      },
+      {
+        "command": "code-assistant.insertWord",
+        "title": "Insert Predicted Word"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "code-assistant.update",
+        "key": "alt+u"
+      },
+      {
+        "command": "code-assistant.insertLine",
+        "key": "alt+right"
+      },
+      {
+        "command": "code-assistant.insertWord",
+        "key": "alt+left"
       }
     ]
   },

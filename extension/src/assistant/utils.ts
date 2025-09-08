@@ -32,7 +32,7 @@ export function stringDifference(str1: string, str2: string)
     let shortIndex = 0;
     for (let i = 0; i < long.length; i++) {
         const longChar = long[i];
-        const shortChar = shortIndex < short.length ? short[i] : '';
+        const shortChar = shortIndex < short.length ? short[shortIndex] : '';
 
         if (longChar != shortChar) {
             substring += longChar;
