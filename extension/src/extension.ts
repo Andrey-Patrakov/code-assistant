@@ -10,11 +10,13 @@ export function activate(context: vscode.ExtensionContext) {
 	const assistant = new Assistant();
 
 	vscode.window.onDidChangeTextEditorSelection(async (e) => {
+		assistant.clear();
 		await assistant.update();
 	});
 
-	context.subscriptions.push(vscode.commands.registerCommand('code-assistant.update', () => {
-		assistant.update();
+	context.subscriptions.push(vscode.commands.registerCommand('code-assistant.update', async () => {
+		assistant.clear();
+		await assistant.update();
 	}));
 
 	context.subscriptions.push(vscode.commands.registerCommand('code-assistant.insertLine', () => {

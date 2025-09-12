@@ -7,12 +7,14 @@ import axios from 'axios';
 export default class Assistant {
     private _prediction: Prediction | null;
     private _decoration: Decoration;
+    private _loading: boolean;
 
     constructor() {
         let decoration_text = 'Обновить предсказание: `Alt` + `U`'
         decoration_text += 'Вставка строки: `Alt` + `→`\\\n';
         decoration_text += 'Вставка слова: `Alt` + `←`\\\n';
 
+        this._loading = false;
         this._prediction = null;
         this._decoration = new Decoration(decoration_text);
     }
@@ -28,8 +30,26 @@ export default class Assistant {
     }
 
     async update() {
-        await this.predict();
-        if (this._prediction) {
+        if (!this._loading)
+        {
+            this._loading = true;
+            try {
+                await this.predict();
+            } finally {
+                this._loading = false;
+            }
+        }
+
+        if (!this._prediction) {
+            return;
+        }
+
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            return;
+        }
+
+        if (editor.selection.active.line == this._prediction.position.line) {
             this._decoration.show(this._prediction);
         }
     }
