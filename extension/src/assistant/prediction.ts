@@ -1,8 +1,12 @@
 import * as vscode from 'vscode';
 import * as utils from './utils';
+import { type StringDifference } from './utils';
 
 
 export default class Prediction {
+
+    public RATIO_THRESHOLD = 0.6;
+    public MAX_DIFF_COUNT = 2;
 
     private _position: vscode.Position;
     private _text: string;
@@ -31,25 +35,30 @@ export default class Prediction {
     insertWord() {  // TODO
     }
 
+    getDifference(): StringDifference[] {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor || !this._position) {
+            return <StringDifference[]>[];
+        }
+
+        const editorLine = editor.document.lineAt(this._position.line);
+        const diff = utils.stringDifferenceWithTh(editorLine.text, this._text, this.RATIO_THRESHOLD);
+        if (diff.ratio >= this.RATIO_THRESHOLD && diff.difference.length <= this.MAX_DIFF_COUNT) {
+            return diff.difference;
+        }
+
+        return <StringDifference[]>[{
+            index: this._position.character+1,
+            text: this._text
+        }];
+    }
+
     getMerged() {
         const editor = vscode.window.activeTextEditor;
         if (!editor || !this._position) {
             return '';
         }
         const editorLine = editor.document.lineAt(this._position.line);
-
-        const str1 = this._text;
-        const str2 = editorLine.text.substring(0, this._position.character+1);
-        const str3 = editorLine.text.substring(this._position.character+1);
-
-        let merged = utils.mergeStrings(str1, str2, 1);
-        if (!merged) {
-            merged = utils.mergeStrings(str2, str1, 1);
-            if (!merged) {
-                return str2 + str1 + str3;
-            }
-        }
-
-        return utils.mergeStrings(merged, str3, 0);
+        return utils.insertDifference(editorLine.text, this.getDifference());
     }
 }

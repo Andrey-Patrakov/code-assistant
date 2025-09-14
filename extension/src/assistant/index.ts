@@ -8,6 +8,7 @@ export default class Assistant {
     private _prediction: Prediction | null;
     private _decoration: Decoration;
     private _loading: boolean;
+    private _ignorePredict: boolean;
 
     constructor() {
         let decoration_text = 'Обновить предсказание: `Alt` + `U`'
@@ -15,16 +16,19 @@ export default class Assistant {
         decoration_text += 'Вставка слова: `Alt` + `←`\\\n';
 
         this._loading = false;
+        this._ignorePredict = false;
         this._prediction = null;
         this._decoration = new Decoration(decoration_text);
     }
 
     insertLine() {
+        this._ignorePredict = true;
         this._prediction?.insertLine();
         this.clear();
     }
 
     insertWord() {
+        this._ignorePredict = true;
         this._prediction?.insertWord();
         this.clear();
     }
@@ -60,6 +64,11 @@ export default class Assistant {
     }
 
     async predict() {
+        if (this._ignorePredict) {
+            this._ignorePredict = false;
+            return;
+        }
+
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
             return;

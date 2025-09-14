@@ -20,11 +20,7 @@ export default class Decoration {
         }
 
         this.clear();
-
-        const editorText = editor.document.lineAt(prediction.position.line).text;
-        const mergedText = prediction.getMerged();
-        const predictedList = utils.stringDifference(editorText, mergedText);
-
+        const predictedList = prediction.getDifference();
         predictedList.forEach((pred: utils.StringDifference) => {
             const decoration = vscode.window.createTextEditorDecorationType({
                 after: {
