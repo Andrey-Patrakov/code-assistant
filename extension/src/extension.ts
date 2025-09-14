@@ -37,8 +37,8 @@ export function activate(context: vscode.ExtensionContext) {
 		assistant.insertLine();
 	}));
 
-	context.subscriptions.push(vscode.commands.registerCommand('code-assistant.insertWord', () => {
-		assistant.insertWord();
+	context.subscriptions.push(vscode.commands.registerCommand('code-assistant.cancel', () => {
+		assistant.clear();
 	}));
 }
 

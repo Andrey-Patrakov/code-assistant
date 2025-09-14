@@ -13,7 +13,7 @@ export default class Assistant {
     constructor() {
         let decoration_text = 'Обновить предсказание: `Alt` + `U`'
         decoration_text += 'Вставка строки: `Alt` + `→`\\\n';
-        decoration_text += 'Вставка слова: `Alt` + `←`\\\n';
+        decoration_text += 'Отмена (убрать подсказку): `Alt` + `←`\\\n';
 
         this._loading = false;
         this._ignorePredict = false;
@@ -61,6 +61,7 @@ export default class Assistant {
     clear() {
         this._prediction = null;
         this._decoration.clear();
+        vscode.commands.executeCommand('setContext', 'code-assistant.hasPrediction', false);
     }
 
     async predict() {
@@ -82,12 +83,13 @@ export default class Assistant {
             return
         }
 
-    await axios.post('http://localhost:3000/complete', {
+        await axios.post('http://localhost:3000/complete', {
             text: text,
             position: cursorOffset,
             api_key: 'rando_string'
         }).then(response => {
             this._prediction = new Prediction(cursorPos, response.data);
+            vscode.commands.executeCommand('setContext', 'code-assistant.hasPrediction', true);
         });
     }
 }

@@ -24,7 +24,7 @@
         "title": "Insert Predicted Line"
       },
       {
-        "command": "code-assistant.insertWord",
+        "command": "code-assistant.cancel",
         "title": "Insert Predicted Word"
       }
     ],
@@ -35,11 +35,13 @@
       },
       {
         "command": "code-assistant.insertLine",
-        "key": "alt+right"
+        "key": "alt+right",
+        "when": "code-assistant.hasPrediction"
       },
       {
-        "command": "code-assistant.insertWord",
-        "key": "alt+left"
+        "command": "code-assistant.cancel",
+        "key": "alt+left",
+        "when": "code-assistant.hasPrediction"
       }
     ]
   },
